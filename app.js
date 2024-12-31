@@ -19,6 +19,7 @@ const User = require("./models/userModel.js");
 const listingRouter = require("./routes/listingRoute.js");
 const reviewRouter = require("./routes/reviewRoute.js");
 const userRouter = require("./routes/userRoute.js");
+const listingController = require("./controllers/listingController.js");
 
 let dbUrl = process.env.ATLASDB_URL;
 async function main() {
@@ -83,15 +84,15 @@ app.use((req, res, next) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews/", reviewRouter);
 app.use("/", userRouter);
-app.use("/", listingRouter);
 
-
-app.listen(8080, () => {
-  console.log("console is listening to port 8080");
-});
+app.get("/",listingController.index);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page not found."));
+});
+
+app.listen(8080, () => {
+  console.log("console is listening to port 8080");
 });
 
 app.use((err, req, res, next) => {
